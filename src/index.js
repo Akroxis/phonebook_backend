@@ -2,15 +2,21 @@ const express = require('express');
 const app = express();
 
 const personRoute = require('./routes/person');
+const path = require("path");
 
+const bodyParser = require("body-parser");
+const contactRoute = require("./routes/contact");
 
-const db = require("./db");
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-    console.log(`${new Date().toString()} => ${req.originalUrl}`);
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    console.log(`${new Date().toString()} => ${req.originalUrl}`, req.body);
     next()
 });
 app.use(personRoute);
+app.use(contactRoute);
 app.use(express.static('public'));
 
 app.use((req, res, next) => {
@@ -25,4 +31,4 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => db());
+app.listen(PORT, () => console.info("hello epta"));

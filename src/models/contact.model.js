@@ -1,12 +1,15 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
+const server = "ds243055.mlab.com:43055";
+const database = 'phonebook_db';
+const user = 'admin';
+const password = "123qwe123";
 
-const contact = new Schema({
-   name: { type: String, required: true},
-   phone: { type: String, required: true}
+mongoose.connect(`mongodb://${user}:${password}@${server}/${database}`, { useNewUrlParser: true });
+
+const ContactSchema = new mongoose.Schema({
+  name: { type: String, required: true},
+  phone: { type: String, required: true, unique: true}
 });
 
-const Contact = mongoose.model('Contact', contact);
-
-module.exports = Contact;
+module.exports = mongoose.model("Contact", ContactSchema);
