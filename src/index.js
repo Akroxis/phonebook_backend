@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     console.log(`${new Date().toString()} => ${req.originalUrl}`, req.body);
     next()
 });
@@ -31,4 +32,4 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => console.info("hello epta"));
+app.listen(PORT, () => console.info(`We've started on port ${PORT}`));

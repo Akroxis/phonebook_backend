@@ -1,6 +1,7 @@
 const ContactModel = require("../models/contact.model");
 const express = require("express");
 const router = express.Router();
+const fs = require('fs');
 
 router.post('/contacts', (req, res) => {
   if(!req.body) {
@@ -23,16 +24,16 @@ router.post('/contacts', (req, res) => {
 });
 
 router.put("/contacts", (req, res) => {
-  if(!req.query.name) {
-    return res.status(400).send('Missing URL parameter: name')
+  if(!req.query.id) {
+    return res.status(400).send('Missing URL parameter: id')
   }
   ContactModel.findOneAndUpdate({
-    name: req.query.name
+    _id: req.query.id
   }, req.body, {
     new: true
   })
     .then(doc => {
-      res.json(doc)
+      res.json(doc);
     })
     .catch(err => {
       res.status(500).json(err)
@@ -63,12 +64,30 @@ router.get("/contacts", (req, res) => {
   }
 });
 
+router.get("/contacts", (req, res) => {
+  console.warn("here>>>")
+  if(req.query.textfile) {
+      ContactModel.find()
+          .then(doc => {
+              res.pipe(doc);
+              console.warn("here>>>")
+              fs.writeFile('contacts.txt', res.json(doc), (err) => {
+                  err ? console.log(error) : console.log("File Created!");
+              });
+
+          })
+          .catch(err => {
+              res.status(500).json(err)
+          });
+  }
+});
+
 router.delete("/contacts", (req, res) => {
   if(!req.query.name) {
     return res.status(400).send('Missing URL parameter: name')
   }
   ContactModel.findOneAndRemove({
-    name: req.query.name
+    _id: req.query.id
   }, req.body, {
     new: true
   })
